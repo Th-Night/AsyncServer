@@ -13,6 +13,7 @@ add_executable(server
     src/CSession.cpp
     src/LogicSystem.cpp
     src/MsgNode.cpp
+    src/AsioIOServicePool.cpp
 ) #添加要编译的源文件,server是生成的可执行文件名
 
 target_include_directories(server PRIVATE
