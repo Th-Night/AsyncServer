@@ -1,5 +1,6 @@
 #include "../include/CServer.hpp"
 #include "../include/CSession.hpp"
+#include "../include/AsioIOServicePool.hpp"
 CServer::CServer(boost::asio::io_context& io_context, short port) : _ioc(io_context), _port(port),
 _acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)){
     StartAccept();
@@ -16,7 +17,8 @@ void CServer::ClearSession(const std::string& uuid) {
 
 void CServer::StartAccept(){
     //这里要开始建立连接，就是异步监听
-    std::shared_ptr<CSession> new_session = std::make_shared<CSession>(_ioc, this); 
+    auto& ioc = AsioIOServicePool::GetInstance()->GetIOService();
+    std::shared_ptr<CSession> new_session = std::make_shared<CSession>(ioc, this); 
     _acceptor.async_accept(
         new_session->SharedSelf()->Socket(),
         std::bind(
