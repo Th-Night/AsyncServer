@@ -17,8 +17,8 @@ void CServer::ClearSession(const std::string& uuid) {
 
 void CServer::StartAccept(){
     //这里要开始建立连接，就是异步监听
-    auto& ioc = AsioIOServicePool::GetInstance()->GetIOService();
-    std::shared_ptr<CSession> new_session = std::make_shared<CSession>(ioc, this); 
+    // auto& ioc = AsioIOServicePool::GetInstance()->GetIOService();
+    std::shared_ptr<CSession> new_session = std::make_shared<CSession>(_ioc, this); 
     _acceptor.async_accept(
         new_session->SharedSelf()->Socket(),
         std::bind(

@@ -5,7 +5,8 @@
 #include "../include/LogicSystem.hpp"
 
 
-CSession::CSession(boost::asio::io_context& ioc, CServer* server) : _socket(ioc), _server(server),_b_close(false), _b_head_parse(false)
+CSession::CSession(boost::asio::io_context& ioc, CServer* server) 
+: _socket(ioc), _server(server),_b_close(false), _b_head_parse(false), _strand(ioc.get_executor())
 {
     boost::uuids::uuid a_uuid = boost::uuids::random_generator()();
     _uuid = boost::uuids::to_string(a_uuid);
@@ -41,13 +42,15 @@ void CSession::Send(char* msg, short max_length, short msgid){
     boost::asio::async_write(
         _socket, 
         boost::asio::buffer(msgnode->_data, msgnode->_total_len),
-        std::bind(
-            &CSession::HandleWrite,
-            this,
-            std::placeholders::_1,
-            SharedSelf()
-        )
-    );
+        boost::asio::bind_executor(
+            _strand,
+            std::bind(
+                &CSession::HandleWrite,
+                this,
+                std::placeholders::_1,
+                SharedSelf()
+            ))
+    );  
 }
 
 void CSession::HandleWrite(const boost::system::error_code& error, std::shared_ptr<CSession> _self_shared){
@@ -65,12 +68,14 @@ void CSession::HandleWrite(const boost::system::error_code& error, std::shared_p
             boost::asio::async_write(
                 _socket, 
                 boost::asio::buffer(msgnode->_data, msgnode->_total_len),
-                std::bind(
+                boost::asio::bind_executor(
+                    _strand,
+                    std::bind(
                     &CSession::HandleWrite,
                     this,
                     std::placeholders::_1,
-                    _self_shared
-                )   
+                    _self_shared)   
+                )
             );
         }
     }
@@ -81,13 +86,15 @@ void CSession::AsyncRead(){
     memset(_data, 0, config::RECV_BUFFER_SIZE);
     _socket.async_read_some(
         boost::asio::buffer(_data, config::RECV_BUFFER_SIZE),
-        std::bind(
-            &CSession::HandleRead,
-            this,
-            std::placeholders::_1,
-            std::placeholders::_2,
-            SharedSelf()
-        )
+        boost::asio::bind_executor(
+            _strand, 
+            std::bind(
+                &CSession::HandleRead,
+                this,
+                std::placeholders::_1,
+                std::placeholders::_2,
+                SharedSelf()
+        ))
     );
 }
 
@@ -106,13 +113,17 @@ void CSession::HandleRead(const boost::system::error_code& error,
                                 memset(_data, 0, config::RECV_BUFFER_SIZE);
                                 _socket.async_read_some(
                                     boost::asio::buffer(_data, config::RECV_BUFFER_SIZE),
-                                    std::bind(
-                                        &CSession::HandleRead,
-                                        this,
-                                        std::placeholders::_1,
-                                        std::placeholders::_2,
-                                        SharedSelf()));
-                                        return;
+                                    boost::asio::bind_executor(
+                                        _strand,
+                                        std::bind(
+                                            &CSession::HandleRead,
+                                            this,
+                                            std::placeholders::_1,
+                                            std::placeholders::_2,
+                                            SharedSelf()
+                                        ))
+                                    );  
+                                    return;
                             }
 
                             //收到的数据比头节点要多
@@ -142,14 +153,16 @@ void CSession::HandleRead(const boost::system::error_code& error,
                                 memset(_data, 0, config::RECV_BUFFER_SIZE);
                                 _socket.async_read_some(
                                     boost::asio::buffer(_data, config::RECV_BUFFER_SIZE),
-                                    std::bind(
-                                        &CSession::HandleRead,
-                                        this,
-                                        std::placeholders::_1,
-                                        std::placeholders::_2,
-                                        SharedSelf()
-                                    )
-                                );
+                                    boost::asio::bind_executor(
+                                        _strand,
+                                        std::bind(
+                                            &CSession::HandleRead,
+                                            this,
+                                            std::placeholders::_1,
+                                            std::placeholders::_2,
+                                            SharedSelf()
+                                        )
+                                ));
                                 _b_head_parse = true;
                                 return;
                             }
@@ -168,14 +181,16 @@ void CSession::HandleRead(const boost::system::error_code& error,
                                 memset(_data, 0, config::RECV_BUFFER_SIZE);
                                 _socket.async_read_some(
                                     boost::asio::buffer(_data, config::RECV_BUFFER_SIZE),
-                                    std::bind(
-                                        &CSession::HandleRead,
-                                        this,
-                                        std::placeholders::_1,
-                                        std::placeholders::_2,
-                                        SharedSelf()
-                                    )
-                                );
+                                    boost::asio::bind_executor(
+                                        _strand,
+                                        std::bind(
+                                            &CSession::HandleRead,
+                                            this,
+                                            std::placeholders::_1,
+                                            std::placeholders::_2,
+                                            SharedSelf()
+                                        )
+                                ));
                                 return;
                             }
                             continue;
@@ -189,14 +204,16 @@ void CSession::HandleRead(const boost::system::error_code& error,
                             memset(_data, 0, config::RECV_BUFFER_SIZE);
                             _socket.async_read_some(
                                 boost::asio::buffer(_data, config::RECV_BUFFER_SIZE),
-                                std::bind(
-                                    &CSession::HandleRead,
-                                    this,
-                                    std::placeholders::_1,
-                                    std::placeholders::_2,
-                                    SharedSelf()
-                                )
-                            );
+                                boost::asio::bind_executor(
+                                    _strand,
+                                    std::bind(
+                                        &CSession::HandleRead,
+                                        this,
+                                        std::placeholders::_1,
+                                        std::placeholders::_2,
+                                        SharedSelf()
+                                    )
+                                ));
                             return;
                         }
                         //数据够用了
@@ -216,13 +233,15 @@ void CSession::HandleRead(const boost::system::error_code& error,
                             memset(_data, 0, config::RECV_BUFFER_SIZE);
                             _socket.async_read_some(
                                 boost::asio::buffer(_data, config::RECV_BUFFER_SIZE),
-                                std::bind(
+                                boost::asio::bind_executor(
+                                    _strand,
+                                    std::bind(
                                     &CSession::HandleRead,
                                     this,
                                     std::placeholders::_1,
                                     std::placeholders::_2,
                                     SharedSelf()
-                                )
+                                ))
                             );
                             return;
                         }
@@ -288,8 +307,11 @@ void CSession::Send(std::string msg, short msgid) {
         return;
     }
     auto& msgnode = _send_que.front();
-    boost::asio::async_write(_socket, boost::asio::buffer(msgnode->_data, msgnode->_total_len),
-        std::bind(&CSession::HandleWrite, this, std::placeholders::_1, SharedSelf()));
+    boost::asio::async_write(
+        _socket, 
+        boost::asio::buffer(msgnode->_data, msgnode->_total_len),
+        boost::asio::bind_executor(_strand, std::bind(&CSession::HandleWrite, this, std::placeholders::_1, SharedSelf())));
+        
 }
 
 LogicNode::LogicNode(std::shared_ptr<CSession> session, std::shared_ptr<RecvNode> recvnode) : _session(session), _recvnode(recvnode){
