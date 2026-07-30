@@ -39,3 +39,4 @@ Thumbs.db
 
 #测试的可执行文件不应该上传
 tests/client
+Demo/
