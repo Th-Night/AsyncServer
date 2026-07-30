@@ -17,6 +17,7 @@ _ioServices(size), _works(size), _nextIOService(0){
 
 AsioIOServicePool::~AsioIOServicePool(){
     std::cout << "AsioIOServicePool destruct" << std::endl;
+    stop();//其实这里建立stop()的话主线程就不应该在stop(),因为当线程池析构的时候这里又会进行一次析构
 }
 
 boost::asio::io_context& AsioIOServicePool::GetIOService(){
@@ -30,6 +31,9 @@ void AsioIOServicePool::stop(){
         work.reset();
     }
     for(auto& t : _threads) {
-        t.join();
+        if(t.joinable()){
+            t.join();
+        }
+
     }
 }
