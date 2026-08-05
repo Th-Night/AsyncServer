@@ -9,6 +9,7 @@
 class CServer;
 class CSession :public std::enable_shared_from_this<CSession>
 {
+    using Strand = boost::asio::strand<boost::asio::io_context::executor_type>;
 public:
 
     CSession(boost::asio::io_context& ioc, CServer* server);
@@ -28,6 +29,7 @@ public:
     //收到的头部结构
     std::shared_ptr<MsgNode> _recv_head_node;
     bool _b_close;
+    Strand _strand; 
 
 private:
     void HandleRead(const boost::system::error_code& error,

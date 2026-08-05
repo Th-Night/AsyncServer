@@ -108,12 +108,12 @@ int main() {
     auto end = std::chrono::high_resolution_clock::now();
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-    std::cout << "\n成功连接：" << connected.load() << '/' << CLIENT_NUM
-              << "\n成功消息：" << success.load() << '/' << CLIENT_NUM * MSG_NUM
-              << "\n失败数量：" << failed.load()
-              << "\n总耗时：" << ms << " ms";
+    std::cout << "\n成功连接:" << connected.load() << '/' << CLIENT_NUM
+              << "\n成功消息:" << success.load() << '/' << CLIENT_NUM * MSG_NUM
+              << "\n失败数量:" << failed.load()
+              << "\n总耗时:" << ms << " ms";
 
-    if (ms > 0) std::cout << "\n吞吐量：" << success.load() * 1000.0 / ms << " 条/秒";
+    if (ms > 0) std::cout << "\n吞吐量:" << success.load() * 1000.0 / ms << " 条/秒";
     std::cout << '\n';
 
     return 0;
