@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Singleton.hpp"
 #include <queue>
 #include <thread>
-#include "CSession.hpp"
 #include <map>
 #include <functional>
-#include "../config/config.hpp"
 #include <jsoncpp/json/value.h>
 #include <jsoncpp/json/reader.h>
 #include <memory>
-// #include <iostream>
+
+#include "../net/CSession.hpp"
+#include "../config/config.hpp"
+#include "../common/Singleton.hpp"
 
 typedef std::function<void(std::shared_ptr<CSession>, const short& msg_id, const std::string& msg_data)> FunCallBack;
 

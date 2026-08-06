@@ -1,8 +1,9 @@
-#include "../include/CSession.hpp"
-#include "../include/CServer.hpp"
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include "../include/LogicSystem.hpp"
+
+#include "../../include/net/CSession.hpp"
+#include "../../include/net/CServer.hpp"
+#include "../../include/messaging/LogicSystem.hpp"
 
 
 CSession::CSession(boost::asio::io_context& ioc, CServer* server) 

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <exception>
 #include <boost/asio.hpp>
-#include "../include/CServer.hpp"
-#include "../include/AsioIOServicePool.hpp"
-#include "../include/AsioIOThreadPool.hpp"
+#include "../include/net/CServer.hpp"
+#include "../include/net/AsioIOServicePool.hpp"
+#include "../include/net/AsioIOThreadPool.hpp"
 
 int main(int argc, char* argv[]){
     try{

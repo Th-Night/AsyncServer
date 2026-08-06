@@ -1,4 +1,4 @@
-#include "../include/LogicSystem.hpp"
+#include "../../include/messaging/LogicSystem.hpp"
 
 LogicSystem::LogicSystem() : _b_stop(false){
     RegisterCallBacks();

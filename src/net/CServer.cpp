@@ -1,6 +1,6 @@
-#include "../include/CServer.hpp"
-#include "../include/CSession.hpp"
-#include "../include/AsioIOServicePool.hpp"
+#include "../../include/net/CServer.hpp"
+#include "../../include/net/CSession.hpp"
+#include "../../include/net/AsioIOServicePool.hpp"
 CServer::CServer(boost::asio::io_context& io_context, short port) : _ioc(io_context), _port(port),
 _acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)){
     StartAccept();

@@ -9,17 +9,17 @@ find_package(Threads REQUIRED) #查找线程库
 
 add_executable(server
     src/main.cpp
-    src/CServer.cpp
-    src/CSession.cpp
-    src/LogicSystem.cpp
-    src/MsgNode.cpp
-    src/AsioIOServicePool.cpp
-    src/AsioIOThreadPool.cpp
+    src/net/CServer.cpp
+    src/net/CSession.cpp
+    src/net/MsgNode.cpp
+    src/net/AsioIOServicePool.cpp
+    src/net/AsioIOThreadPool.cpp
+
+    src/messaging/LogicSystem.cpp
 ) #添加要编译的源文件,server是生成的可执行文件名
 
 target_include_directories(server PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/config
 ) #设置头文件搜索路径,PRIVATE表示只对当前target可见
 
 target_compile_definitions(server PRIVATE

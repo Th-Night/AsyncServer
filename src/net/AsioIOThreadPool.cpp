@@ -1,4 +1,4 @@
-#include "../include/AsioIOThreadPool.hpp"
+#include "../../include/net/AsioIOThreadPool.hpp"
 
 AsioIOThreadPool::AsioIOThreadPool(size_t threadNum) 
 :_work(std::make_unique<Work>(boost::asio::make_work_guard(_service))){
@@ -11,6 +11,10 @@ AsioIOThreadPool::AsioIOThreadPool(size_t threadNum)
 
 boost::asio::io_context& AsioIOThreadPool::GetIOService(){
     return _service;
+}
+
+AsioIOThreadPool::~AsioIOThreadPool(){
+    stop();
 }
 
 void AsioIOThreadPool::stop(){

@@ -12,6 +12,6 @@ namespace config{
     inline constexpr std::size_t RECV_BUFFER_SIZE = 4096;//数据区的最大值
 }
 
-enum MSG_IDS{
+enum MessageType{
     MSG_HELLO_WORLD = 1001
 };

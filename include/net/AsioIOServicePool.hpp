@@ -1,7 +1,8 @@
 #pragma once
-#include "Singleton.hpp"
 #include <boost/asio.hpp>
 #include <vector>
+
+#include "../common/Singleton.hpp"
 
 class AsioIOServicePool : public Singleton<AsioIOServicePool>{
     friend class Singleton<AsioIOServicePool>;

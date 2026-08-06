@@ -1,13 +1,14 @@
 #pragma once
-#include "Singleton.hpp"
 #include <boost/asio.hpp>
 #include <atomic>
+
+#include "../common/Singleton.hpp"
 
 class AsioIOThreadPool : public Singleton<AsioIOThreadPool>{
 public:
     using Work = boost::asio::executor_work_guard<boost::asio::io_context::executor_type>;
     friend class Singleton<AsioIOThreadPool>;
-    ~AsioIOThreadPool(){}
+    ~AsioIOThreadPool();
     AsioIOThreadPool& operator=(const AsioIOThreadPool&) = delete;
     AsioIOThreadPool(const AsioIOThreadPool&) = delete;
     boost::asio::io_context& GetIOService();
