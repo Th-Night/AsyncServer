@@ -1,6 +1,6 @@
 #include <boost/asio.hpp>
 
-#include "../../include/net/MsgNode.hpp"
+#include "../../include/common/MsgNode.hpp"
 #include "../../include/config/config.hpp"
 #include "../../include/messaging/LogicSystem.hpp"
 

@@ -11,6 +11,7 @@
 #include "../net/CSession.hpp"
 #include "../config/config.hpp"
 #include "../common/Singleton.hpp"
+#include "../Service/helloWorldService.hpp"
 
 typedef std::function<void(std::shared_ptr<CSession>, const short& msg_id, const std::string& msg_data)> FunCallBack;
 
@@ -23,13 +24,15 @@ public:
     void DealMsg();
 
 private:
-    LogicSystem();
-    void RegisterCallBacks();
-    void HelloWordCallBack(std::shared_ptr<CSession>, const short& msg_id, const std::string& msg_data);
     std::queue<std::shared_ptr<LogicNode>> _msg_que;
     std::mutex _mutex;
     std::condition_variable _consume;
     std::thread _worker_thread;
     bool _b_stop;
     std::map<short, FunCallBack> _fun_callback;
+
+private:
+    LogicSystem();
+    void RegisterCallBacks();
+
 };

@@ -4,7 +4,7 @@
 #include <boost/asio.hpp>
 #include <map>
 #include <queue>
-#include "MsgNode.hpp"
+#include "../common/MsgNode.hpp"
 #include "../config/config.hpp"
 class CServer;
 class CSession :public std::enable_shared_from_this<CSession>

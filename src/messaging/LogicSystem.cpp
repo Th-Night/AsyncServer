@@ -6,13 +6,10 @@ LogicSystem::LogicSystem() : _b_stop(false){
 }
 
 void LogicSystem::RegisterCallBacks(){
-    _fun_callback[MSG_HELLO_WORLD] 
-    = std::bind(
-        &LogicSystem::HelloWordCallBack, 
-        this, 
-        std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3);
+
+    _fun_callback[MSG_HELLO_WORLD] = [service = std::make_shared<helloworld>()](std::shared_ptr<CSession> session, const short& msg_id, const std::string& msg_data){
+        service->HelloWordCallBack(session, msg_id, msg_data);
+    };
     
 }
 
@@ -65,34 +62,12 @@ void LogicSystem::PostMsgToQue(std::shared_ptr<LogicNode> msg){
     }
 }
 
-void LogicSystem::HelloWordCallBack(std::shared_ptr<CSession> session, const short& msg_id, 
-    const std::string& msg_data){
-        Json::Reader reader;
-        Json::Value root;
-        if(!reader.parse(msg_data, root)){
-            return;
-        }
-
-        int from = root["from"].asInt();
-        int to = root["to"].asInt();
-        std::string content = root["content"].asString();
-        
-        std::cout << "from: " << from 
-                  << ", to: " << to 
-                  << ", content: " << content << std::endl;
-        
-        Json::Value response;
-        response["from"] = 0;
-        response["to"] = from;
-        response["content"] = "server receive: " + content;
-        
-        std::string return_str = response.toStyledString();
-        session->Send(return_str, msg_id);
-
-}
-
 LogicSystem::~LogicSystem(){
+
     _b_stop = true;
     _consume.notify_one();
-    _worker_thread.join();
+
+    if(_worker_thread.joinable()) {
+        _worker_thread.join();
+    }
 }

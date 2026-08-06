@@ -7,15 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) #设置C++标准为必需
 
 find_package(Threads REQUIRED) #查找线程库
 
+file(GLOB SERVICE_CPP CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Service/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/net/*.cpp
+)
+
 add_executable(server
     src/main.cpp
-    src/net/CServer.cpp
-    src/net/CSession.cpp
-    src/net/MsgNode.cpp
-    src/net/AsioIOServicePool.cpp
-    src/net/AsioIOThreadPool.cpp
-
+    src/common/MsgNode.cpp
     src/messaging/LogicSystem.cpp
+
+    ${SERVICE_CPP}
 ) #添加要编译的源文件,server是生成的可执行文件名
 
 target_include_directories(server PRIVATE
